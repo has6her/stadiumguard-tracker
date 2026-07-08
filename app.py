@@ -42,5 +42,23 @@ def get_issue(issue_id):
         return jsonify({"error": "Issue not found"}), 404
     return jsonify(issue), 200
 
+@app.route('/issues/<int:issue_id>', methods=['PUT'])
+def update_issue(issue_id):
+    issue = next((i for i in issues if i['id'] == issue_id), None)
+    if issue is None:
+        return jsonify({"error": "Issue not found"}), 404
+
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+
+    issue['title'] = data.get('title', issue['title'])
+    issue['description'] = data.get('description', issue['description'])
+    issue['severity'] = data.get('severity', issue['severity'])
+    issue['status'] = data.get('status', issue['status'])
+    issue['reported_by'] = data.get('reported_by', issue['reported_by'])
+
+    return jsonify(issue), 200
+
 if __name__ == '__main__':
     app.run(debug=True)
