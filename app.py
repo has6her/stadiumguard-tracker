@@ -33,7 +33,16 @@ def create_issue():
 
 @app.route('/issues', methods=['GET'])
 def get_issues():
-    return jsonify(issues), 200
+    status = request.args.get('status')
+    severity = request.args.get('severity')
+
+    result = issues
+    if status:
+        result = [i for i in result if i['status'].lower() == status.lower()]
+    if severity:
+        result = [i for i in result if i['severity'].lower() == severity.lower()]
+
+    return jsonify(result), 200
 
 @app.route('/issues/<int:issue_id>', methods=['GET'])
 def get_issue(issue_id):
