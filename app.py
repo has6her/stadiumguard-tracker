@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 
 app = Flask(__name__)
 
@@ -7,7 +7,7 @@ next_id = 1
 
 @app.route('/')
 def home():
-    return jsonify({"message": "StadiumGuard Issue Tracker API is running!"})
+    return render_template('index.html')
 
 @app.route('/issues', methods=['POST'])
 def create_issue():
