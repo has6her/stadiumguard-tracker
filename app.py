@@ -44,6 +44,24 @@ def get_issues():
 
     return jsonify(result), 200
 
+@app.route('/issues/report', methods=['GET'])
+def issue_report():
+    total = len(issues)
+    by_status = {}
+    by_severity = {}
+
+    for issue in issues:
+        status = issue['status']
+        severity = issue['severity']
+        by_status[status] = by_status.get(status, 0) + 1
+        by_severity[severity] = by_severity.get(severity, 0) + 1
+
+    return jsonify({
+        "total_issues": total,
+        "by_status": by_status,
+        "by_severity": by_severity
+    }), 200
+
 @app.route('/issues/<int:issue_id>', methods=['GET'])
 def get_issue(issue_id):
     issue = next((i for i in issues if i['id'] == issue_id), None)
