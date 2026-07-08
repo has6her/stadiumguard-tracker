@@ -2,7 +2,6 @@ from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
-# In-memory storage for issues
 issues = []
 next_id = 1
 
@@ -15,7 +14,6 @@ def create_issue():
     global next_id
     data = request.get_json()
 
-    # Basic validation
     if not data or 'title' not in data or 'description' not in data:
         return jsonify({"error": "Title and description are required"}), 400
 
@@ -36,6 +34,13 @@ def create_issue():
 @app.route('/issues', methods=['GET'])
 def get_issues():
     return jsonify(issues), 200
+
+@app.route('/issues/<int:issue_id>', methods=['GET'])
+def get_issue(issue_id):
+    issue = next((i for i in issues if i['id'] == issue_id), None)
+    if issue is None:
+        return jsonify({"error": "Issue not found"}), 404
+    return jsonify(issue), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
